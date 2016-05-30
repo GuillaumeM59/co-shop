@@ -7,14 +7,10 @@
 
   <h2>recapitulatif</h2>
 
-
-<ul>
-  <% @bids.each do |bid| %>
-    <li>
-      <%= link_to bid.all, bid %>
-    </li>
-  <% end %>
-</ul>
+  <%=current_user.prenom%>
+  <%=current_user.nom%>
+  <%=current_user.email%>
+  <%=current_user.phone%>
 
 
   <% if flash[:error].present? %>
