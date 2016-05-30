@@ -25,7 +25,7 @@ gem 'bootstrap-sass'
 
 gem 'stripe'
 
- gem 'materialize-sass'
+gem 'materialize-sass'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'

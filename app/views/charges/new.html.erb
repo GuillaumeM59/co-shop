@@ -1,5 +1,22 @@
 <%= form_tag charges_path do %>
 <article>
+
+
+  <h1>page paiment</h1>
+
+
+  <h2>recapitulatif</h2>
+
+
+<ul>
+  <% @bids.each do |bid| %>
+    <li>
+      <%= link_to bid.all, bid %>
+    </li>
+  <% end %>
+</ul>
+
+
   <% if flash[:error].present? %>
   <div id="error_explanation">
     <p><%= flash[:error] %></p>
