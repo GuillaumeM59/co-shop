@@ -31,8 +31,17 @@
                   <i class="fa fa-arrow-right fa-3x text-center" aria-hidden="true"></i>
         </div>
         <div class="field col-md-5">
-          <%= f.label :shop_id %><br>
-          <%= f.number_field :shop_id %>
+          <h6>Magasin</h6>
+          <div class="field">
+            <%= f.label "Enseigne" %><br>
+            <%= f.collection_select :brand_id, Brand.order(:name), :id, :name, include_blank: true %>
+          </div>
+
+          <div class="field">
+            <%= f.label "Magasin" %><br>
+            <%= f.grouped_collection_select :shop_id, Brand.order(:name), :shops, :name, :id, :name, include_blank: false %>
+          </div>
+
         </div>
 
         <div class="field">
@@ -106,17 +115,91 @@
 
 <hr>
 
+
+<!--  SOON BIDS -->
+
 <div class="container">
-  <div class="row">
-    <div class="col-md-1"></div>
-    <div class="col-md-10">
-      <div class="embed-responsive embed-responsive-16by9">
-        <iframe class="embed-responsive-item" src="http://www.youtube.com/embed/pYf5deeiPf4" width="800" height="800"></iframe>
-      </div>
-    </div>
-    <div class="col-md-1"></div>
+
+  <div class="row text-center">
+    <h3>Dernières minutes :</h3>
   </div>
 </div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <div class="row">
+        <% a=1%>
+        <% @aroundlastbids.reverse.each do |bid| %>
+        <% if a<=6 %>
+        <%driver=User.where(id:bid.driver_id).first%>
+        <%shop=Shop.where(id:bid.shop_id).first%>
+        <div class="col-md-3 bidblock">
+          <div class="row">
+            <div class="col-md-5">
+              <div class="row">
+                <div class="col-md-6">
+                  <p class="text-center"><%= link_to(image_tag(driver.avatar, size: "50"),user_path(driver.id)) %></p>
+                </div>
+                <div class="col-md-6">
+                  <p class="text-left">
+                    <%= driver.username %></p>
+                  <p class="text-left"><%= driver.city %>
+                    <% if current_user %>
+                  (<%= disttodriver= Geocoder::Calculations.distance_between([current_user.latitude,current_user.longitude], [driver.latitude,driver.longitude], :units => :km).round(2) %> km)
+                    <% else %>
+                  (<%= disttodriver= Geocoder::Calculations.distance_between([@client.latitude,@client.longitude], [driver.latitude,driver.longitude], :units => :km).round(2) %> km)
+                    <% end %>
+                      </p>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-2">
+              <i class="fa fa-arrow-right fa-3x text-center" aria-hidden="true"></i>
+              <p class="text-center">(<%= disttodriver= Geocoder::Calculations.distance_between([shop.latitude,shop.longitude], [driver.latitude,driver.longitude], :units => :km).round(2) %> km)
+                  </p>
+
+            </div>
+            <div class="col-md-5">
+            <%= image_tag((Brand.where(id: shop.brand_id).first.brandpic), alt:"Logo", class:"enseignesauchan img-responsive enseignes", width:"100")%>
+              <p class="text-center"><%= shop.name.capitalize %></p>
+            </div>
+
+          </div>
+<p class="text-center"><%= bid.go_at.strftime("%d/%m/%y") %></p>
+<p class="text-center hour"><%= bid.go_at.strftime("%H:%M") %></p>
+
+          <p>Places restantes : 4</p>
+          <p>
+            <div class="progress">
+              <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+                <span class="sr-only">20% Complete</span>
+              </div>
+            </div>
+          <%= link_to 'Réserver', "data-toggle" => "reservationmodal", 'data-target' => '#reservationmodal' %>
+          </p>
+
+        </div>
+
+
+        <% a+=1 %>
+        <%end%>
+        <%end%>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+<hr>
+
+
+
+<!--  LAST BIDS -->
+
+
+
 
 <div class="container">
 
@@ -131,35 +214,45 @@
       <div class="row">
         <% a=1%>
         <% Bid.all.order(:created_at).each do |bid| %>
-        <% if a<=4 %>
+        <% if a<=6 %>
         <%driver=User.where(id:bid.driver_id).first%>
-        <div class="col-md-4 exemples">
+        <%shop=Shop.where(id:bid.shop_id).first%>
+        <div class="col-md-3 bidblock">
           <div class="row">
             <div class="col-md-5">
               <div class="row">
                 <div class="col-md-6">
-                  <p class="text-center"><%= image_tag(driver.avatar, size: "50") %></p>
+                  <p class="text-center"><%= link_to(image_tag(driver.avatar, size: "50"),user_path(driver.id)) %></p>
                 </div>
                 <div class="col-md-6">
                   <p class="text-left">
                     <%= driver.username %></p>
-                  <p class="text-left"><%= driver.city %></p>
+                  <p class="text-left"><%= driver.city %>
+                    <% if current_user %>
+                  (<%= disttodriver= Geocoder::Calculations.distance_between([current_user.latitude,current_user.longitude], [driver.latitude,driver.longitude], :units => :km).round(2) %> km)
+                    <% else %>
+                  (<%= disttodriver= Geocoder::Calculations.distance_between([@client.latitude,@client.longitude], [driver.latitude,driver.longitude], :units => :km).round(2) %> km)
+                    <% end %>
+                      </p>
                 </div>
               </div>
 
             </div>
             <div class="col-md-2">
               <i class="fa fa-arrow-right fa-3x text-center" aria-hidden="true"></i>
+              <p class="text-center">(<%= disttodriver= Geocoder::Calculations.distance_between([shop.latitude,shop.longitude], [driver.latitude,driver.longitude], :units => :km).round(2) %> km)
+                  </p>
 
             </div>
             <div class="col-md-5">
-              <img src="img/Logos-Enseignes/Alimentaire/Auchan.png" alt="Logo" class="enseignesauchan img-responsive enseignes"/>
-              <p class="text-center">Villeneuve-D'Ascq</p>
+            <%= image_tag((Brand.where(id: shop.brand_id).first.brandpic), alt:"Logo", class:"enseignesauchan img-responsive enseignes", width:"100")%>
+              <p class="text-center"><%= shop.name.capitalize %></p>
             </div>
 
           </div>
+          <p class="text-center"><%= bid.go_at.strftime("%d/%m/%y") %></p>
+          <p class="text-center hour"><%= bid.go_at.strftime("%H:%M") %></p>
 
-          <p class="horaire text-center"><%= bid.go_at %></p>
           <p>Places restantes : 4</p>
           <p>
             <div class="progress">
@@ -167,9 +260,28 @@
                 <span class="sr-only">20% Complete</span>
               </div>
             </div>
-            <a href="" class="text-center reservation">Réserver !</a>
+            <%= link_to "Réserver", "", :class => "btn btn-default btn", "data-toggle" => "modal","data-target" => "#reservationmodal" %>
           </p>
+
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="reservationmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-6 col-sm-offset-3 text-center">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                <br><br>
+                <div class="alert alert-info"><h4>You can add any html and css ;)</h4>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+
+
+
         <% a+=1 %>
         <%end%>
         <%end%>
@@ -180,7 +292,7 @@
   </div>
 </div>
 
-<% if current_user %>
+
 <hr>
 <div class="container">
   <div class="row">
@@ -204,7 +316,7 @@
     </div>
   </div>
 </div>
-<% end %>
+
 
 <hr>
 
