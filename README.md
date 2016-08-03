@@ -4,4 +4,3 @@
 
 * Guillaume
 * Othman
-* Bertrand
