@@ -11,7 +11,6 @@
  * file per style scope.
  *
 *= require 'index'
- *= require 'connexion'
  *= require_self
  *
  */
@@ -20,8 +19,7 @@
  @import 'rails_bootstrap_forms';
 @import 'index';
 @import 'brands';
-@import "jquery-ui";
-@import 'connexion';
+@import 'shops';
 @import 'contact';
 @import 'users';
 @import "static_pages";
@@ -489,7 +487,13 @@ textarea {
 .logoutbtn {
   margin-top: 3px
 }
+.signin_bloc .label{
+  color: black
+}
+.formtastic, .formtastic ul, .formtastic ol, .formtastic li, .formtastic fieldset, .formtastic legend, .formtastic input, .formtastic button, .formtastic textarea, .formtastic select, .formtastic p{
 
+  padding: 3px !important;
+}
 @media all and (max-width:991px) {
   .nav > li {
     display: inline-block;
