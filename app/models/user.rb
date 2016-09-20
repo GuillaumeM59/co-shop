@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   validates_presence_of :cbrand_id,:if => :driver?
   validates_presence_of :cmodel_id,:if => :driver?
   validates_presence_of :carsize, :if => :driver?
-  validates_inclusion_of :gender, :in => [true, false]
+validates :gender,:presence => { :if => 'gender.nil?' }, inclusion: { in: [true, false] }
     after_create :build_profile
 
     def build_profile
